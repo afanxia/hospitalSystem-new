@@ -1,0 +1,6 @@
+[
+    {"id": 5, "name": "config-role", "display": "manage roles", "desc": ""},
+    {"id": 2, "name": "attach-role", "display": "add role for a user", "desc": ""},
+    {"id": 3, "name": "config-user", "display": "manage users", "desc": ""},
+    {"id": 4, "name": "config-permission", "display": "manage permissions", "desc": ""}
+]

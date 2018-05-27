@@ -1,0 +1,63 @@
+# 使用两个星号（*) 表示匹配任意中间目录
+*.pyc
+*.pyo
+*.swp
+*~
+
+# Packages
+*.egg
+*.egg-info
+dist
+build/
+eggs
+bin
+sdist
+
+#Sphinx builds
+_build
+
+# Installer logs
+pip-log.txt
+
+# Flake8 violation file
+violations.flake8.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+__pycache__
+database.db
+mysql
+
+# Sphinx
+docs/_build
+
+# Virtual environments
+.env
+env
+
+.webassets-cache
+.DS_Store
+*.sublime-*
+.cache/
+.vscode
+.idea
+
+# pyvenv
+**/venv*/
+
+
+*.tar
+*.tar.gz
+
+*.sqlite
+**/migrations/
+
+.DS_Store
+**/node_modules/
+**/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json

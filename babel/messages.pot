@@ -1,0 +1,62 @@
+# Translations template for PROJECT.
+# Copyright (C) 2018 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2018-05-02 15:29+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.3\n"
+
+#: appname/error.py:19 appname/error.py:30
+msgid "Resource not existed."
+msgstr ""
+
+#: appname/error.py:38
+msgid " is occupied"
+msgstr ""
+
+#: appname/error.py:39
+msgid "data integrity conflict"
+msgstr ""
+
+#: appname/controllers/user.py:24
+msgid "User not existed."
+msgstr ""
+
+#: appname/controllers/user.py:28
+msgid "user was disabled, cannot login"
+msgstr ""
+
+#: appname/controllers/user.py:35
+msgid "password error"
+msgstr ""
+
+#: appname/models/base.py:120
+#, python-format
+msgid "%(source)s has relative %(ref)s, can not delete."
+msgstr ""
+
+#: appname/models/base.py:128
+#, python-format
+msgid "%(source)s has relative %(ref)s, can not disable."
+msgstr ""
+
+#: appname/models/base.py:139
+#, python-format
+msgid "%(source)s is disabled, can not enable."
+msgstr ""
+
+#: appname/utils/perm.py:10
+msgid "You are in the wrong place"
+msgstr ""
+
