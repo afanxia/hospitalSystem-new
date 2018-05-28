@@ -4,7 +4,7 @@ import { Message } from 'element-ui'
 import store from '../store'
 // import { getToken } from '@/utils/auth'
 
-import qs from 'qs'
+// import qs from 'qs'
 
 // 创建axios实例
 const service = axios.create({
@@ -22,10 +22,10 @@ service.interceptors.request.use(config => {
 
   // 配置request的POST为form-data形式
   if (config.method === 'post') {
-    config.data = qs.stringify(config.data)
+    // config.data = qs.stringify(config.data)
     // following line will send a normal url request rather than a json request
     // config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    config.headers['Content-Type'] = 'application/json'
+    // config.headers['Content-Type'] = 'application/json'
   }
 
   return config

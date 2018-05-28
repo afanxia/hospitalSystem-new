@@ -4,6 +4,9 @@ from sqlalchemy.schema import Sequence
 from flask_login import AnonymousUserMixin, UserMixin
 from .base import db, BaseModel, I18NModel
 
+from flask import current_app
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, SignatureExpired, BadSignature
+
 
 user_role = db.Table(
     'user_role',
@@ -61,6 +64,29 @@ class User(BaseModel, UserMixin):
 
     def check_password(self, value):
         return check_password_hash(self.password, value)
+
+    def generate_confirmation_token(self, expiration=3600):
+        """生成token"""
+        s = Serializer(current_app.config["SECRET_KEY"], expiration)
+
+        # 把 id、username、roles 放进 token
+        token = s.dumps({
+            "id": self.id,
+            "username": self.username,
+            "roles": [role.name for role in self.roles]
+        }).decode()
+        return token
+
+    @staticmethod
+    def confirm(token):
+        """验证token"""
+        s = Serializer(current_app.config["SECRET_KEY"])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+
+        return data
 
     @property
     def is_root(self):
