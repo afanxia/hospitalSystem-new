@@ -1,3 +1,4 @@
+import datetime as dt
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.orm import relationship
 from sqlalchemy.schema import Sequence
@@ -48,6 +49,9 @@ class User(BaseModel, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.String(512), nullable=False)
+    nickname = db.Column(db.String(64))
+    create_time = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    update_time = db.Column(db.DateTime)
     phone = db.Column(db.String(32))
     disabled = db.Column(db.Boolean(), default=False, nullable=False)
     roles = relationship('Role', secondary=user_role, back_populates='users')

@@ -90,12 +90,26 @@ class UserInfoAPI(Resource):
             "status": Status.SUCCESS.status,
             "message": Status.SUCCESS.message,
             "request": request.base_url,
-            "data": {}
+            "userPermission": {
+         "menuList":[  
+            "role",
+            "user",
+            "article"
+         ],
+         "roleId":1,
+         "nickname":"超级用户",
+         "roleName":"管理员",
+         "permissionList":[  
+            "article:list",
+            "article:add",
+            "user:list",
+         ],
+         "userId":10003}
         }
         token = request.values.get("token")
         if token:
             token_data = User.confirm(token)
-            ret_json["data"].update({
+            ret_json["userPermission"].update({
                 "username": token_data.get("username"),
                 "roles": token_data.get("roles")
             })
