@@ -56,15 +56,19 @@ class AuthService:
 
     @staticmethod
     def get_logged_in_user_info():
+        token = request.values.get("token")
+        confirm_data = User.confirm(token)
+        uid = confirm_data['id']
+        user = User.query.filter_by(id=uid).first()
         ret_json = {
             "status": Status.SUCCESS.status,
             "message": Status.SUCCESS.message,
             "request": request.base_url,
             "userPermission": {
-                "userId":1,
-                "roleId":1,
-                "nickname":"aaa",
-                "roleName":"bbb",
+                "userId":user.id,
+                "roleId":user.roles[0].id,
+                "nickname":user.nickname,
+                "roleName":user.roles[0].name,
                 "menuList":[  
                    "role",
                    "user",

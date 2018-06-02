@@ -1,7 +1,7 @@
 from sqlalchemy.sql import and_
 from flask import Blueprint, request, jsonify
 from flask_babel import gettext as _
-from flask_login import login_user, logout_user, login_required, current_user as tusr
+from flask_login import login_user, logout_user, current_user as tusr
 
 from hospitalSystem.models import db, User, Role, Permission, user_role, role_perm
 from hospitalSystem.models.user import root
@@ -33,7 +33,6 @@ class RoleListView(BaseResource):
 
     @role_api.expect(_role, validate=True)
     @role_api.doc('create new role(s)')
-    @login_required
     def post(self):
         """Creates new Role(s) """
         return super().post()
@@ -55,18 +54,15 @@ class RoleView(BaseResource):
 
     @role_api.expect(_role, validate=True)
     @role_api.doc('create a new role')
-    @login_required
     def post(self):
         return super().post()
 
     @role_api.expect(_role, validate=True)
     @role_api.doc('patch a role')
-    @login_required
     def patch(self, rid):
         return super().patch(rid)
 
     @role_api.doc('delete a role')
-    @login_required
     def delete(self, rid):
         return super().delete(rid)
 
@@ -85,13 +81,11 @@ class RolePermissionsList(Resource):
 class RolePermissions(Resource):
     @role_api.doc('add a permission for a role')
     @perms_required(PMS_CONFIG_ROLE)
-    @login_required
     def post(self, rid, pid):
         return RoleService.add_role_permission_by_id(rid, pid)
 
     @role_api.doc('delete a permission for a role')
     @perms_required(PMS_CONFIG_ROLE)
-    @login_required
     def delete(self, rid, pid):
         return RoleService.delete_role_permission_by_id(rid, pid)
 
