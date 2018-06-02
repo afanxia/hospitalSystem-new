@@ -7,8 +7,6 @@ from hospitalSystem.models import db, User, Role, Permission, user_role, role_pe
 from hospitalSystem.models.user import root
 from hospitalSystem.error import Error, ok_rt
 from hospitalSystem.utils.perm import perms_required, resource_need_perms
-from hospitalSystem.const import (PMS_CONFIG_USER, PMS_CONFIG_ROLE, PMS_ATTACH_ROLE,
-                           PMS_CONFIG_PERMISSION)
 #from .base import register_api, Resource, I18NResource
 from .base import register_api, BaseResource, I18NResource
 from flask_restplus import Resource

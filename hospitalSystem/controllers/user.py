@@ -7,8 +7,7 @@ from hospitalSystem.models import db, User, Role, Permission, user_role, role_pe
 from hospitalSystem.models.user import root
 from hospitalSystem.error import Error, ok_rt
 from hospitalSystem.utils.perm import perms_required, resource_need_perms
-from hospitalSystem.const import (PMS_CONFIG_USER, PMS_CONFIG_ROLE, PMS_ATTACH_ROLE,
-                           PMS_CONFIG_PERMISSION)
+from hospitalSystem.const import (PMS_ADD_USER, PMS_UPDATE_USER, PMS_DELETE_USER)
 #from .base import register_api, Resource, I18NResource
 from .base import register_api, BaseResource, I18NResource
 from flask_restplus import Resource
@@ -19,7 +18,7 @@ user_api = UserDto.api
 _user = UserDto.user
 
 
-@resource_need_perms('POST', PMS_CONFIG_USER)
+@resource_need_perms('POST', PMS_ADD_USER)
 @user_api.route('/')
 class UserListView(BaseResource):
     model = User
@@ -37,9 +36,9 @@ class UserListView(BaseResource):
         return super().post()
 
 
-@resource_need_perms('POST', PMS_CONFIG_USER)
-@resource_need_perms('PATCH', PMS_CONFIG_USER)
-@resource_need_perms('DELETE', PMS_CONFIG_USER)
+@resource_need_perms('POST', PMS_ADD_USER)
+@resource_need_perms('PATCH', PMS_UPDATE_USER)
+@resource_need_perms('DELETE', PMS_DELETE_USER)
 @user_api.param('uid', 'The User identifier')
 @user_api.route('/<int:uid>')
 #@user_api.response(404, 'User not found.')
@@ -79,11 +78,11 @@ class UserRolesList(Resource):
 @user_api.route('/<int:uid>/uroles/<int:rid>')
 class UserRoles(Resource):
     @user_api.doc('add a role for a user')
-    @perms_required(PMS_ATTACH_ROLE)
+    @perms_required(PMS_UPDATE_USER)
     def post(self, uid, rid):
         return UserService.add_user_role_by_id(uid, rid)
 
     @user_api.doc('delete a permission for a user')
-    @perms_required(PMS_ATTACH_ROLE)
+    @perms_required(PMS_UPDATE_USER)
     def delete(self, uid, rid):
         return UserService.delete_user_role_by_id(uid, rid)

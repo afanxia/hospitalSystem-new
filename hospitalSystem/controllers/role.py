@@ -7,8 +7,7 @@ from hospitalSystem.models import db, User, Role, Permission, user_role, role_pe
 from hospitalSystem.models.user import root
 from hospitalSystem.error import Error, ok_rt
 from hospitalSystem.utils.perm import perms_required, resource_need_perms
-from hospitalSystem.const import (PMS_CONFIG_USER, PMS_CONFIG_ROLE, PMS_ATTACH_ROLE,
-                           PMS_CONFIG_PERMISSION)
+from hospitalSystem.const import (PMS_ADD_ROLE, PMS_UPDATE_ROLE, PMS_DELETE_ROLE)
 #from .base import register_api, Resource, I18NResource
 from .base import register_api, BaseResource, I18NResource
 from flask_restplus import Resource
@@ -20,7 +19,7 @@ role_api = RoleDto.api
 _role = RoleDto.role
 
 
-@resource_need_perms('POST', PMS_CONFIG_ROLE)
+@resource_need_perms('POST', PMS_ADD_ROLE)
 @role_api.route('/')
 class RoleListView(BaseResource):
     model = Role
@@ -38,9 +37,9 @@ class RoleListView(BaseResource):
         return super().post()
 
 
-@resource_need_perms('POST', PMS_CONFIG_ROLE)
-@resource_need_perms('PATCH', PMS_CONFIG_ROLE)
-@resource_need_perms('DELETE', PMS_CONFIG_ROLE)
+@resource_need_perms('POST', PMS_ADD_ROLE)
+@resource_need_perms('PATCH', PMS_UPDATE_ROLE)
+@resource_need_perms('DELETE', PMS_DELETE_ROLE)
 @role_api.param('rid', 'The Role identifier')
 @role_api.route('/<int:rid>')
 #@role_api.response(404, 'Role not found.')
@@ -80,12 +79,12 @@ class RolePermissionsList(Resource):
 @role_api.route('/<int:rid>/perms/<int:pid>')
 class RolePermissions(Resource):
     @role_api.doc('add a permission for a role')
-    @perms_required(PMS_CONFIG_ROLE)
+    @perms_required(PMS_UPDATE_ROLE)
     def post(self, rid, pid):
         return RoleService.add_role_permission_by_id(rid, pid)
 
     @role_api.doc('delete a permission for a role')
-    @perms_required(PMS_CONFIG_ROLE)
+    @perms_required(PMS_UPDATE_ROLE)
     def delete(self, rid, pid):
         return RoleService.delete_role_permission_by_id(rid, pid)
 

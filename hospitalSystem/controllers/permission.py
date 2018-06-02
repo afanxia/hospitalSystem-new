@@ -7,8 +7,7 @@ from hospitalSystem.models import db, User, Role, Permission, user_role, role_pe
 from hospitalSystem.models.user import root
 from hospitalSystem.error import Error, ok_rt
 from hospitalSystem.utils.perm import perms_required, resource_need_perms
-from hospitalSystem.const import (PMS_CONFIG_USER, PMS_CONFIG_ROLE, PMS_ATTACH_ROLE,
-                           PMS_CONFIG_PERMISSION)
+from hospitalSystem.const import (PMS_ADD_PERMISSION, PMS_UPDATE_PERMISSION, PMS_DELETE_PERMISSION)
 #from .base import register_api, Resource, I18NResource
 from .base import register_api, BaseResource, I18NResource
 from flask_restplus import Resource
@@ -19,7 +18,7 @@ perm_api = PermissionDto.api
 _perm = PermissionDto.permission
 
 
-@resource_need_perms('POST', PMS_CONFIG_PERMISSION)
+@resource_need_perms('POST', PMS_ADD_PERMISSION)
 @perm_api.route('/')
 class PermissionListView(BaseResource):
     model = Permission
@@ -37,9 +36,9 @@ class PermissionListView(BaseResource):
         return super().post()
 
 
-@resource_need_perms('POST', PMS_CONFIG_PERMISSION)
-@resource_need_perms('PATCH', PMS_CONFIG_PERMISSION)
-@resource_need_perms('DELETE', PMS_CONFIG_PERMISSION)
+@resource_need_perms('POST', PMS_ADD_PERMISSION)
+@resource_need_perms('PATCH', PMS_UPDATE_PERMISSION)
+@resource_need_perms('DELETE', PMS_DELETE_PERMISSION)
 @perm_api.param('rid', 'The Permission identifier')
 @perm_api.route('/<int:rid>')
 #@perm_api.response(404, 'Permission not found.')
