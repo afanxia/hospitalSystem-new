@@ -12,7 +12,7 @@ from hospitalSystem.const import (PMS_CONFIG_USER, PMS_CONFIG_ROLE, PMS_ATTACH_R
 #from .base import register_api, Resource, I18NResource
 from .base import register_api, BaseResource, I18NResource
 from flask_restplus import Resource
-
+from hospitalSystem.service.user import UserService
 from hospitalSystem.utils.dto import UserDto
 
 user_api = UserDto.api
@@ -71,8 +71,7 @@ class UserView(BaseResource):
 class UserRolesList(Resource):
     @user_api.doc('List all roles for a user')
     def get(self, uid):
-        usr = User.query.filter(User.id == uid).one()
-        return jsonify(usr.roles)
+        return UserService.get_user_roles(uid)
 
 
 @user_api.param('uid', 'The User identifier')
@@ -82,21 +81,9 @@ class UserRoles(Resource):
     @user_api.doc('add a role for a user')
     @perms_required(PMS_ATTACH_ROLE)
     def post(self, uid, rid):
-        role = Role.query.filter_by(id=rid).one()
-        perms = [x.name for x in role.perms]
-        if not tusr.has_perms(perms):
-            raise Error('permission disallowed', 401)
-        ins = user_role.insert().values(user_id=uid, role_id=rid)
-        db.session.execute(ins)
-        db.session.commit()
-        return jsonify(ok_rt)
+        return UserService.add_user_role_by_id(uid, rid)
 
     @user_api.doc('delete a permission for a user')
     @perms_required(PMS_ATTACH_ROLE)
     def delete(self, uid, rid):
-        st = user_role.delete().where(
-            and_(user_role.c.user_id == uid, user_role.c.role_id == rid))
-        db.session.execute(st)
-        db.session.commit()
-        return jsonify(ok_rt)
-
+        return UserService.delete_user_role_by_id(uid, rid)

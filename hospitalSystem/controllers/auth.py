@@ -10,11 +10,11 @@ from hospitalSystem.utils.perm import perms_required, resource_need_perms
 from hospitalSystem.const import (PMS_CONFIG_USER, PMS_CONFIG_ROLE, PMS_ATTACH_ROLE,
                            PMS_CONFIG_PERMISSION)
 #from .base import register_api, Resource, I18NResource
-#from .base import register_api, BaseResource, I18NResource
+from .base import register_api, BaseResource, I18NResource
 from flask_restplus import Resource
-
-from hospitalSystem.utils.status import confirm_token, confirm_key, Status
+from hospitalSystem.utils.status import confirm_token
 from hospitalSystem.utils.dto import AuthDto
+from hospitalSystem.service.auth import AuthService
 
 auth_api = AuthDto.api
 user_auth = AuthDto.user_auth
@@ -27,37 +27,8 @@ class UserLogin(Resource):
     @auth_api.doc('user login')
     @auth_api.expect(user_auth, validate=True)
     def post(self):
-        data = request.get_json()
-        if data['username'] == 'root':
-            user = root
-        else:
-            user = User.query.filter_by(username=data['username']).first()
-
-        if not user:
-            err_msg = _('User not existed.')
-            raise Error(err_msg, 404)
-
-        if user.disabled:
-            err_msg = _('user was disabled, cannot login')
-            raise Error(err_msg, 400)
-
-        if user.check_password(data['password']):
-            login_user(user)
-            ret_json = {
-                "status": Status.SUCCESS.status,
-                "message": "login success!",
-                "request": request.base_url,
-                "data": {
-                    "token": "",
-                }
-            }
-            token = user.generate_confirmation_token()
-            ret_json.update({"data": {"token": token}})
-            return jsonify(ret_json)
-            #return jsonify(user)
-        else:
-            err_msg = _('password error')
-            raise Error(err_msg, 400)
+        post_data = request.json
+        return AuthService.login(data=post_data)
 
 
 @auth_api.route('/logout')
@@ -66,15 +37,9 @@ class LogoutAPI(Resource):
     Logout Resource
     """
     @auth_api.doc('logout a user')
+    @confirm_token()
     def delete(self):
-        logout_user()
-        ret_json = {
-            "status": Status.SUCCESS.status,
-            "message": "logout!",
-            "request": request.base_url,
-            "data": {}
-        }
-        return jsonify(ret_json)
+        return AuthService.logout()
 
 
 @auth_api.route('/info')
@@ -82,41 +47,7 @@ class UserInfoAPI(Resource):
     """
     User Info Resource
     """
-
     @auth_api.doc('get current user info')
     @confirm_token()
     def get(self):
-        ret_json = {
-            "status": Status.SUCCESS.status,
-            "message": Status.SUCCESS.message,
-            "request": request.base_url,
-            "userPermission": {
-         "menuList":[  
-            "role",
-            "user",
-            "article"
-         ],
-         "roleId":1,
-         "nickname":"超级用户",
-         "roleName":"管理员",
-         "permissionList":[  
-            "article:list",
-            "article:add",
-            "user:list",
-         ],
-         "userId":10003}
-        }
-        token = request.values.get("token")
-        if token:
-            token_data = User.confirm(token)
-            ret_json["userPermission"].update({
-                "username": token_data.get("username"),
-                "roles": token_data.get("roles")
-            })
-            return jsonify(ret_json)
-
-        ret_json.update({
-            "status": Status.FAIL.status,
-            "message": "Get user informations fail!"
-        })
-        return jsonify(ret_json)
+        return AuthService.get_logged_in_user_info()
