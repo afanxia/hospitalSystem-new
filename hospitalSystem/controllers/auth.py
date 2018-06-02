@@ -36,7 +36,7 @@ class LogoutAPI(Resource):
     """
     @auth_api.doc('logout a user')
     @confirm_token()
-    def delete(self):
+    def post(self):
         return AuthService.logout()
 
 
