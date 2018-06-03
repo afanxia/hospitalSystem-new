@@ -9,8 +9,6 @@ class UserDto:
         'phone': fields.Integer(required=True, description='user telephone number'),
         'disabled': fields.Boolean(description='disabled or not'),
         'nickname': fields.String(required=True, description='user nickname'),
-        'create_time': fields.DateTime(required=True, description='create time'),
-        'update_time': fields.DateTime(required=True, description='last update time'),
     })
 
 class RoleDto:

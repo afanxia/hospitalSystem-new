@@ -7,6 +7,7 @@ from hospitalSystem.models import db, User, Role, Permission, user_role, role_pe
 from hospitalSystem.models.user import root
 from hospitalSystem.error import Error, ok_rt
 from hospitalSystem.utils.status import confirm_token, confirm_key, Status
+from hospitalSystem.utils.gravatar import gravatar
 
 class AuthService:
 
@@ -68,6 +69,7 @@ class AuthService:
                 "userId":user.id,
                 "roleId":user.roles[0].id,
                 "nickname":user.nickname,
+                "avatar":gravatar(user.username),
                 "roleName":user.roles[0].name,
                 "menuList":[  
                    "role",
