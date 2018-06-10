@@ -83,6 +83,7 @@
 </template>
 <script>
   import { mapGetters } from 'vuex'
+  import { getAllUsers, getAllRolesInUserPage, addUser, updateUser, deleteUser } from '@/api/user'
 
   export default {
     data() {
@@ -123,21 +124,14 @@
     },
     methods: {
       getAllRoles() {
-        this.api({
-          url: '/user/getAllRoles',
-          method: 'get'
-        }).then(data => {
+        getAllRolesInUserPage().then(data => {
           this.roles = data.list
         })
       },
       getList() {
         // 查询列表
         this.listLoading = true
-        this.api({
-          url: '/user/list',
-          method: 'get',
-          params: this.listQuery
-        }).then(data => {
+        getAllUsers().then(data => {
           this.listLoading = false
           this.list = data.list
           this.totalCount = data.totalCount
@@ -182,11 +176,7 @@
       },
       createUser() {
         // 添加新用户
-        this.api({
-          url: '/user/addUser',
-          method: 'post',
-          data: this.tempUser
-        }).then(() => {
+        addUser(this.tempUser).then(() => {
           this.getList()
           this.dialogFormVisible = false
         })
@@ -194,11 +184,7 @@
       updateUser() {
         // 修改用户信息
         const _vue = this
-        this.api({
-          url: '/user/updateUser',
-          method: 'post',
-          data: this.tempUser
-        }).then(() => {
+        updateUser(this.tempUser).then(() => {
           let msg = '修改成功'
           this.dialogFormVisible = false
           if (this.userId === this.tempUser.userId) {
@@ -223,11 +209,7 @@
         }).then(() => {
           const user = _vue.list[$index]
           user.deleteStatus = '2'
-          _vue.api({
-            url: '/user/updateUser',
-            method: 'post',
-            data: user
-          }).then(() => {
+          deleteUser(user.userId).then(() => {
             _vue.getList()
           }).catch(() => {
             _vue.$message.error('删除失败')

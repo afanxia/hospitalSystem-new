@@ -86,3 +86,9 @@ class UserRoles(Resource):
     @perms_required(PMS_UPDATE_USER)
     def delete(self, uid, rid):
         return UserService.delete_user_role_by_id(uid, rid)
+
+@user_api.route('/all')
+class AllUserList(Resource):
+    @user_api.doc('List users page')
+    def get(self):
+        return UserService.listUserPage()

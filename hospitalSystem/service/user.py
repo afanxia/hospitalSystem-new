@@ -33,3 +33,31 @@ class UserService:
         db.session.execute(st)
         db.session.commit()
         return jsonify(ok_rt)
+
+    @staticmethod
+    def listUserPage():
+        users = User.query.all()
+        tmpList = []
+        for user in users:
+            tmpUser = {}
+            tmpUser.update(
+                {
+                    "nickname": user.nickname,
+                    "username": user.username,
+                    "roleId": user.roles[0].id,
+                    "roleName": user.roles[0].name,
+                    "createTime": user.create_time,
+                    "updateTime": user.update_time
+                }
+            )
+            tmpList.append(tmpUser)
+
+        ret_json = {
+            "status": Status.SUCCESS.status,
+            "message": Status.SUCCESS.message,
+            "request": request.base_url,
+            "totalCount": len(tmpList),
+            "totalPage": 1,
+            "list": tmpList
+        }
+        return jsonify(ret_json)

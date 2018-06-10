@@ -72,3 +72,25 @@ class RoleService:
             "list": tmpList
         }
         return jsonify(ret_json)
+
+    @staticmethod
+    def listRoleInUserPage():
+        roles = Role.query.all()
+        tmpList = []
+        for role in roles:
+            tmpRole = {}
+            tmpRole.update(
+                {
+                    "roleId": role.id,
+                    "roleName": role.name
+                }
+            )
+            tmpList.append(tmpRole)
+
+        ret_json = {
+            "status": Status.SUCCESS.status,
+            "message": Status.SUCCESS.message,
+            "request": request.base_url,
+            "list": tmpList
+        }
+        return jsonify(ret_json)
