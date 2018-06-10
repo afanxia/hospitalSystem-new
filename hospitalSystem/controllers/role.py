@@ -74,6 +74,12 @@ class RolePermissionsList(Resource):
         return RoleService.get_role_permissions(rid)
 
 
+@role_api.route('/all')
+class RolePageList(Resource):
+    @role_api.doc('List role page')
+    def get(self):
+        return RoleService.listRolePage()
+
 @role_api.param('rid', 'The Role identifier')
 @role_api.param('pid', 'The Permission identifier')
 @role_api.route('/<int:rid>/perms/<int:pid>')

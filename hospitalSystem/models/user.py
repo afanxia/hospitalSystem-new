@@ -27,8 +27,10 @@ class Permission(BaseModel):
     id = db.Column(db.Integer(),
                    Sequence('permission_seq', start=1000, increment=1),
                    primary_key=True)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    display = db.Column(db.String(64), unique=True, nullable=False)
+    menu_code = db.Column(db.String(64), nullable=False) # 归属菜单,前端判断并展示菜单使用
+    menu_name = db.Column(db.String(64), nullable=False) # 菜单的中文释义
+    code = db.Column(db.String(64), unique=True, nullable=False) # 权限的代码/通配符,对应代码中@resource_need_perms等的value
+    name = db.Column(db.String(64), nullable=False) # 本权限的中文释义
     desc = db.Column(db.String(256))
     system = db.Column(db.Boolean)
     roles = relationship('Role', secondary=role_perm, back_populates='perms')
@@ -37,6 +39,8 @@ class Permission(BaseModel):
 class Role(BaseModel):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(64), unique=True, nullable=False)
+    create_time = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+    update_time = db.Column(db.DateTime)
     desc = db.Column(db.String(256))
     perms = relationship('Permission', secondary=role_perm, back_populates='roles')
     users = relationship('User', secondary=user_role, back_populates='roles')

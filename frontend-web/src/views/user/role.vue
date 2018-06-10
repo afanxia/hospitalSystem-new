@@ -29,7 +29,7 @@
           <div v-else>
             <div v-for="menu in scope.row.menus" style="text-align: left">
               <span style="width: 100px;display: inline-block;text-align: right ">{{menu.menuName}}</span>
-              <el-tag v-for="perm in menu.permissions" :key="perm.permissionName" v-text="perm.permissionName"
+              <el-tag v-for="perm in menu.permissions" :key="perm.name" v-text="perm.name"
                       style="margin-right: 3px;"
                       type="primary"></el-tag>
             </div>
@@ -68,7 +68,7 @@
               <el-checkbox-group v-model="tempRole.permissions">
                 <el-checkbox v-for="perm in menu.permissions" :label="perm.id" @change="checkRequired(perm,_index)"
                              :key="perm.id">
-                  <span :class="{requiredPerm:perm.requiredPerm===1}">{{perm.permissionName}}</span>
+                  <span :class="{requiredPerm:perm.requiredPerm===1}">{{perm.name}}</span>
                 </el-checkbox>
               </el-checkbox-group>
             </div>
@@ -85,6 +85,7 @@
   </div>
 </template>
 <script>
+  import { getAllPermissions, getAllRoles, addRole, updateRole, deleteRole } from '@/api/role'
   export default {
     data() {
       return {
@@ -107,25 +108,19 @@
     },
     created() {
       this.getList()
-      this.getAllPermisson()
+      this.getAllPermission()
     },
     methods: {
-      getAllPermisson() {
+      getAllPermission() {
         // 查询所有权限
-        this.api({
-          url: '/user/listAllPermission',
-          method: 'get'
-        }).then(data => {
+        getAllPermissions().then(data => {
           this.allPermission = data.list
         })
       },
       getList() {
         // 查询列表
         this.listLoading = true
-        this.api({
-          url: '/user/listRole',
-          method: 'get'
-        }).then(data => {
+        getAllRoles().then(data => {
           this.listLoading = false
           this.list = data.list
         })
@@ -150,7 +145,7 @@
         for (let i = 0; i < role.menus.length; i++) {
           const perm = role.menus[i].permissions
           for (let j = 0; j < perm.length; j++) {
-            this.tempRole.permissions.push(perm[j].permissionId)
+            this.tempRole.permissions.push(perm[j].id)
           }
         }
         this.dialogStatus = 'update'
@@ -164,11 +159,7 @@
           return
         }
         // 添加新角色
-        this.api({
-          url: '/user/addRole',
-          method: 'post',
-          data: this.tempRole
-        }).then(() => {
+        addRole(this.tempRole).then(() => {
           this.getList()
           this.dialogFormVisible = false
         })
@@ -181,11 +172,7 @@
           return
         }
         // 修改角色
-        this.api({
-          url: '/user/updateRole',
-          method: 'post',
-          data: this.tempRole
-        }).then(() => {
+        updateRole(this.tempRole).then(() => {
           this.getList()
           this.dialogFormVisible = false
         })
@@ -208,7 +195,7 @@
         const roles = this.list
         let result = true
         for (let j = 0; j < roles.length; j++) {
-          if (roles[j].roleName === roleName && (!roleId || roles[j].roleId !== roleId )) {
+          if (roles[j].roleName === roleName && (!roleId || roles[j].roleId !== roleId)) {
             this.$message.error('角色名称已存在')
             result = false
             break
@@ -217,21 +204,14 @@
         return result
       },
       removeRole($index) {
-        const _vue = this
         this.$confirm('确定删除此角色?', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false,
           type: 'warning'
         }).then(() => {
-          const role = _vue.list[$index]
-          _vue.api({
-            url: '/user/deleteRole',
-            method: 'post',
-            data: {
-              roleId: role.roleId
-            }
-          }).then(() => {
-            _vue.getList()
+          const role = this.list[$index]
+          deleteRole(role.roleId).then(() => {
+            this.getList()
           }).catch(e => {
           })
         })

@@ -112,7 +112,7 @@
       },
       showCreate() {
         // 显示新增对话框
-        this.tempArticle.content = '';
+        this.tempArticle.content = ''
         this.dialogStatus = 'create'
         this.dialogFormVisible = true
       },

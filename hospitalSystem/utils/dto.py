@@ -23,7 +23,6 @@ class PermissionDto:
     permission = api.model('permission', {
         'name': fields.String(required=True, description='permission name'),
         'desc': fields.String(required=True, description='permission description'),
-        'display': fields.String(required=True, description='display info'),
         'system': fields.Boolean(description='is system permission or not'),
     })
 

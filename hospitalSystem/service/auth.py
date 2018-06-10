@@ -61,26 +61,23 @@ class AuthService:
         confirm_data = User.confirm(token)
         uid = confirm_data['id']
         user = User.query.filter_by(id=uid).first()
+        role = user.roles[0]
+        permissions = role.perms
+        menuList = list(set(perm.menu_code for perm in permissions))
+        permissionList = [perm.code for perm in permissions]
+
         ret_json = {
             "status": Status.SUCCESS.status,
             "message": Status.SUCCESS.message,
             "request": request.base_url,
             "userPermission": {
-                "userId":user.id,
-                "roleId":user.roles[0].id,
-                "nickname":user.nickname,
-                "avatar":gravatar(user.username),
-                "roleName":user.roles[0].name,
-                "menuList":[  
-                   "role",
-                   "user",
-                   "article"
-                ],
-                "permissionList":[  
-                   "article:list",
-                   "article:add",
-                   "user:list",
-                ]
+                "userId": user.id,
+                "roleId": role.id,
+                "nickname": user.nickname,
+                "avatar": gravatar(user.username),
+                "roleName": role.name,
+                "menuList": menuList,
+                "permissionList": permissionList
             }
         }
         return jsonify(ret_json)

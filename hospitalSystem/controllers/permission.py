@@ -13,6 +13,7 @@ from .base import register_api, BaseResource, I18NResource
 from flask_restplus import Resource
 
 from hospitalSystem.utils.dto import PermissionDto
+from hospitalSystem.service.permission import PermissionService
 
 perm_api = PermissionDto.api
 _perm = PermissionDto.permission
@@ -71,3 +72,9 @@ class PermissionView(BaseResource):
             raise Error('ask your admin for support', 401)
         return super().delete(rid)
 
+
+@perm_api.route('/all')
+class PermissionPageList(Resource):
+    @perm_api.doc('List all permissions in role page')
+    def get(self):
+        return PermissionService.listPermissionPage()

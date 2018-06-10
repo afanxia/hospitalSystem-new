@@ -29,3 +29,46 @@ class RoleService:
         db.session.execute(st)
         db.session.commit()
         return jsonify(ok_rt)
+
+    @staticmethod
+    def listRolePage():
+        roles = Role.query.all()
+        tmpList = []
+        for role in roles:
+            tmpRole = {}
+            tmpMenuList = []
+            perms = role.perms
+            menuCodeSet = set(perm.menu_code for perm in perms)
+            for menuCode in menuCodeSet:
+                menuName = ''
+                tmpPerms = []
+                tmpMenu = {}
+                for perm in perms:
+                    if perm.menu_code == menuCode:
+                        menuName = perm.menu_name
+                        tmpPerms.append(perm)
+                tmpMenu.update(
+                    {
+                        "menuCode": menuCode,
+                        "menuName": menuName,
+                        "permissions": tmpPerms,
+                    }
+                )
+                tmpMenuList.append(tmpMenu)
+            tmpRole.update(
+                {
+                    "roleId": role.id,
+                    "roleName": role.name,
+                    "menus": tmpMenuList,
+                    "users": role.users
+                }
+            )
+            tmpList.append(tmpRole)
+
+        ret_json = {
+            "status": Status.SUCCESS.status,
+            "message": Status.SUCCESS.message,
+            "request": request.base_url,
+            "list": tmpList
+        }
+        return jsonify(ret_json)
