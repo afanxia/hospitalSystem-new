@@ -8,6 +8,8 @@ from hospitalSystem.models.user import root
 from hospitalSystem.error import Error, ok_rt
 from hospitalSystem.utils.status import confirm_token, confirm_key, Status
 
+from hospitalSystem.utils.fop import req_2_sql, get_fop
+
 
 class UserService:
 
@@ -36,7 +38,25 @@ class UserService:
 
     @staticmethod
     def listUserPage():
-        users = User.query.all()
+        filters, sorting, pagination = req_2_sql(request)
+        q = ('select {selection} from {table} {filters} {sort} {pagination}')
+        cnt = db.session.execute(q.format(
+            table='user',
+            selection='count(*)',
+            filters=filters,
+            sort=sorting,
+            pagination=''
+        )).scalar()
+
+        filters, order_by, page, page_size = get_fop(request)
+        pagination = User.query.order_by(User.id.desc()).paginate(page,per_page=page_size,error_out=False)
+        users = pagination.items
+
+        totalPage = 1
+        if cnt > 0:
+            totalPage = (cnt / page_size + 1) if (cnt % page_size > 0) else (cnt / page_size)
+
+        # users = User.query.all()
         tmpList = []
         for user in users:
             tmpUser = {}
@@ -56,8 +76,9 @@ class UserService:
             "status": Status.SUCCESS.status,
             "message": Status.SUCCESS.message,
             "request": request.base_url,
-            "totalCount": len(tmpList),
-            "totalPage": 1,
+            "totalCount": cnt,
+            # "totalCount": len(tmpList),
+            "totalPage": totalPage,
             "list": tmpList
         }
         return jsonify(ret_json)
