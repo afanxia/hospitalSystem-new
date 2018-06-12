@@ -131,7 +131,7 @@
       getList() {
         // 查询列表
         this.listLoading = true
-        getAllUsers().then(data => {
+        getAllUsers(this.listQuery).then(data => {
           this.listLoading = false
           this.list = data.list
           this.totalCount = data.totalCount

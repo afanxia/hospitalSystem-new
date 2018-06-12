@@ -9,11 +9,15 @@ export function getAllRolesInUserPage() {
   })
 }
 
-export function getAllUsers() {
+export function getAllUsers(listQuery) {
   return api({
     url: '/users/all',
     method: 'get',
-    params: { 'token': getToken() }
+    params: {
+      'token': getToken(),
+      'page': listQuery.pageNum,
+      'page_size': listQuery.pageRow
+    }
   })
 }
 
