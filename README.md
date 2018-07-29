@@ -1,3 +1,9 @@
+## Inspiration
+This project is inspired by [SpringBoot-Shiro-Vue](https://github.com/Heeexy/SpringBoot-Shiro-Vue), which is a SpringBoot(Java) practice. Many thanks to the author.
+In this project, I've been trying to implement the backend with Python, with a consistent permission controlling method in the original one, i.e., RBAC(role based access control).
+
+It is also a chance for me to play with Python/Flask, and could be a boilerplate to build a Python webapp.
+
 ## Get start
 **!! Using `python3.6` or later version.**
 ```bash
@@ -47,3 +53,6 @@ $ # edit translations/zh/messages.po, then
 $ python manage.py babel
 $ compile
 ```
+
+## RBAC page
+![RBAC](http://ots7yt7am.bkt.clouddn.com/blog/role_permission.png)
